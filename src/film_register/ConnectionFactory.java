@@ -19,7 +19,7 @@ import java.sql.SQLException;
  */
 public class ConnectionFactory {
     public static Connection getConnection() throws SQLException{
-        String url = ""; //ändra
+        String url = "jdbc:mysql://localhost/moviedatabase"; //ändra
         String user = "root";
         String password = "";
         Connection connection = (com.mysql.jdbc.Connection)DriverManager.getConnection(url, user, password);

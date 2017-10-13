@@ -5,6 +5,9 @@
  */
 package film_register;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import my.Film_Register_GUI.Film_Register_GUI;
 
 /**
@@ -20,6 +23,9 @@ public class Film_Register {
         // TODO code application logic here
         Film_Register_GUI gui = new Film_Register_GUI();
         gui.show();
+        
+        
+        
     }
     
 }
