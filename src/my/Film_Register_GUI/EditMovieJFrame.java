@@ -7,42 +7,55 @@ package my.Film_Register_GUI;
 
 import film_register.Item;
 import film_register.Movie;
+import film_register.SQLHandler;
 import film_register.TVSerie;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author milooyaguez karlsson
  */
 public class EditMovieJFrame extends javax.swing.JFrame {
-    
+
+    Item item;
+
     /**
      * Creates new form EditMovieJFrame
      */
     public EditMovieJFrame() {
         initComponents();
     }
-    
-    public void getMovie(Item item){
+
+    //hämtar den filmen/serien som är markerad och fyller i all information från min main GUI
+    public void getMovie(Item item) {
+        this.item = item;
         titleTextBox.setText(item.getTitle());
         descriptionTextBox.setText(item.getDescription());
         directorTextBox.setText(item.getDirector());
         personalRatingTextBox.setText(String.valueOf(item.getRating()));
         imdbRatingTextBox.setText(String.valueOf(item.getImdbRating()));
-        
-        if(item instanceof Movie){
+        releaseDateTextBox.setText(String.valueOf(item.getReleaseDate()));
+
+        if (item instanceof Movie) { //om det är en film ska inte avsnitt och säsonger visas
             seasonsLabel.hide();
             seasonsTextBox.hide();
             episodesLabel.hide();
             episodesTextBox.hide();
             lengthTextBox.setText(String.valueOf(item.getLength()));
-        } else{
+            setTitle("Edit Movie");
+        } else { //om det är en serie ska inte längd visas
             lengthLabel.hide();
             lengthTextBox.hide();
             seasonsTextBox.setText(String.valueOf(item.getSeasons()));
             episodesTextBox.setText(String.valueOf(item.getEpisodes()));
+            setTitle("Edit TV-Serie");
         }
-        
-        
+        if (item.getStatus() == 1) {
+            statusCheckBox1.setSelected(true);
+        } else {
+            statusCheckBox1.setSelected(false);
+        }
+
     }
 
     /**
@@ -121,6 +134,11 @@ public class EditMovieJFrame extends javax.swing.JFrame {
         statusCheckBox1.setText("Seen/Not seen");
 
         editButton.setText("Edit");
+        editButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                editButtonMousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -154,12 +172,12 @@ public class EditMovieJFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(seasonsTextBox, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(episodesTextBox)
-                            .addComponent(lengthTextBox)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(editButton)
                                     .addComponent(statusCheckBox1))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(lengthTextBox, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -210,6 +228,48 @@ public class EditMovieJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void editButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMousePressed
+        SQLHandler sqlHandler = new SQLHandler();
+        int id = item.getId();
+        String title = titleTextBox.getText();
+        String description = descriptionTextBox.getText();
+        String director = directorTextBox.getText();
+        float personalRating = 0;
+        float imdbRating = 0;
+        try {
+            personalRating = Float.parseFloat(personalRatingTextBox.getText());
+            imdbRating = Float.parseFloat(imdbRatingTextBox.getText());
+        } catch (NumberFormatException numberFormatException) {
+            JOptionPane.showMessageDialog(null, "Number formatting error");
+        }
+        int status;
+        if (statusCheckBox1.isSelected()) {
+            status = 1;
+        } else {
+            status = 2;
+        }
+        
+        if(item instanceof Movie){ //kolla om det är en serie eller film man ska ändra på för det är olika metoder i sqlHandler
+            int length = 0;
+            try {
+                length = Integer.parseInt(lengthTextBox.getText());
+            } catch (NumberFormatException numberFormatException) {
+                JOptionPane.showMessageDialog(null, "Number formatting error");
+            }
+            sqlHandler.editMovie(title, description, director, length, personalRating, imdbRating, status, director, id);
+        } else if(item instanceof TVSerie){
+            int seasons = 0;
+            int episodes = 0;
+            try {
+                seasons = Integer.parseInt(seasonsTextBox.getText());
+                episodes = Integer.parseInt(episodesTextBox.getText());
+            } catch (NumberFormatException numberFormatException) {
+                JOptionPane.showMessageDialog(null, "Number formatting error");
+            }
+            sqlHandler.editSerie(title, description, director, seasons, episodes, personalRating, imdbRating, status, director, id);
+        }
+    }//GEN-LAST:event_editButtonMousePressed
 
     /**
      * @param args the command line arguments

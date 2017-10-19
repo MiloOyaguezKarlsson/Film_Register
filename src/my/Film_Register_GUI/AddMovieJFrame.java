@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -277,6 +278,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
             lengthTextBox.setText(scraper.scrapeDuration(url));
             episodesTextBox.setText(scraper.scrapeEpisodes(url));
         } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Something went wrong when scraping, check the imdb link");
             Logger.getLogger(AddMovieJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -292,17 +294,20 @@ public class AddMovieJFrame extends javax.swing.JFrame {
             } else {
                 status = 2; //har inte sett
             }
-            sqlHandler.addMovie(titleTextBox.getText(),
-                    descriptionTextBox.getText(),
-                    directorTextBox.getText(),
-                    Integer.parseInt(lengthTextBox.getText()),
-                    Float.parseFloat(personalRatingTextBox.getText()),
-                    Float.parseFloat(imdbRatingTextBox.getText()),
-                    imdbLinkTextBox.getText(),
-                    status,
-                    releaseDateTextBox.getText()
-            );
-            System.out.println("addded movie");
+            try {
+                sqlHandler.addMovie(titleTextBox.getText(),
+                        descriptionTextBox.getText(),
+                        directorTextBox.getText(),
+                        Integer.parseInt(lengthTextBox.getText()),
+                        Float.parseFloat(personalRatingTextBox.getText()),
+                        Float.parseFloat(imdbRatingTextBox.getText()),
+                        imdbLinkTextBox.getText(),
+                        status,
+                        releaseDateTextBox.getText()
+                );
+            } catch (NumberFormatException numberFormatException) {
+                JOptionPane.showMessageDialog(null, "Number formatting error");
+            }
         } else if (typeComboBox.getSelectedItem() == "TV-Serie") {
             int status;
             if (statusCheckBox.isSelected()) {
@@ -310,18 +315,21 @@ public class AddMovieJFrame extends javax.swing.JFrame {
             } else {
                 status = 2; //har inte sett
             }
-            sqlHandler.addSerie(titleTextBox.getText(),
-                    descriptionTextBox.getText(),
-                    directorTextBox.getText(),
-                    Integer.parseInt(seasonsTextBox.getText()),
-                    Integer.parseInt(episodesTextBox.getText()),
-                    Float.parseFloat(personalRatingTextBox.getText()),
-                    Float.parseFloat(imdbRatingTextBox.getText()),
-                    imdbLinkTextBox.getText(),
-                    status,
-                    releaseDateTextBox.getText()
-            );
-            System.out.println("added serie");
+            try {
+                sqlHandler.addSerie(titleTextBox.getText(),
+                        descriptionTextBox.getText(),
+                        directorTextBox.getText(),
+                        Integer.parseInt(seasonsTextBox.getText()),
+                        Integer.parseInt(episodesTextBox.getText()),
+                        Float.parseFloat(personalRatingTextBox.getText()),
+                        Float.parseFloat(imdbRatingTextBox.getText()),
+                        imdbLinkTextBox.getText(),
+                        status,
+                        releaseDateTextBox.getText()
+                );
+            } catch (NumberFormatException numberFormatException) {
+                JOptionPane.showMessageDialog(null, "Number formatting error");
+            }
         }
     }//GEN-LAST:event_addButtonMouseClicked
 

@@ -9,18 +9,18 @@ import com.mysql.jdbc.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author milooyaguez karlsson
  */
-public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar data i databasen
+public class SQLHandler {  //min klass för att hantera alla förfrågningar till och från databasen med sqlfrågor
 
     public List<Item> getItemsDefault() {
         try {
@@ -58,14 +58,13 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                             data.getInt("id"),
                             data.getInt("status")
                     ));
-                } else {
-                    System.out.println("ERROR");
                 }
             }
             connection.close();
             return itemList;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
         }
         return null;
     }
@@ -106,14 +105,13 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                             data.getInt("id"),
                             data.getInt("status")
                     ));
-                } else {
-                    System.out.println("ERROR");
-                }
+                } 
             }
             connection.close();
             return itemList;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
         }
         return null;
     }
@@ -154,14 +152,13 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                             data.getInt("id"),
                             data.getInt("status")
                     ));
-                } else {
-                    System.out.println("ERROR");
                 }
             }
             connection.close();
             return itemList;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
         }
         return null;
     }
@@ -202,14 +199,13 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                             data.getInt("id"),
                             data.getInt("status")
                     ));
-                } else {
-                    System.out.println("ERROR");
                 }
             }
             connection.close();
             return itemList;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
         }
         return null;
     }
@@ -225,7 +221,7 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
             ResultSet data = stmt.executeQuery(sql);
 
             while (data.next()) {
-                if (data.getInt("type") == 1) { //om film
+                if (data.getInt("type") == 1) { //om det är en film
                     itemList.add(new Movie(data.getInt("length"),
                             data.getString("title"),
                             data.getString("description"),
@@ -237,7 +233,7 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                             data.getInt("id"),
                             data.getInt("status")
                     ));
-                } else if (data.getInt("type") == 2) { //om tv-serie
+                } else if (data.getInt("type") == 2) { //om det är en tv-serie
                     itemList.add(new TVSerie(data.getInt("seasons"),
                             data.getInt("episodes"),
                             data.getString("title"),
@@ -250,14 +246,13 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                             data.getInt("id"),
                             data.getInt("status")
                     ));
-                } else {
-                    System.out.println("ERROR");
-                }
+                } 
             }
             connection.close();
             return itemList;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
         }
         return null;
     }
@@ -272,10 +267,12 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
                     + "NULL, 1, '%s', '%s', '%s', NULL, NULL, '%s', %d, %f, %f, '%s', %d)", 
                     title, description, director, releaseDate, length, personalRating, imdbRating, imdbLink, status);
             stmt.executeUpdate(sql);
+            connection.close();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            JOptionPane.showMessageDialog(null, "Database error");
+            return false; //används aldrig men returnerar falskt om det missylckades
         }
     }
 
@@ -288,13 +285,64 @@ public class SQLHandler {  //min modell. hämtar data, lägger upp data, ändrar
             String sql = String.format(Locale.US, "INSERT INTO movies VALUES (" //Locale.US behövs för att formatera float med punkt istället för komma
                     + "NULL, 2, '%s', '%s', '%s', %d, %d, '%s', NULL, %f, %f, '%s', %d)", 
                     title, description, director, seasons, episodes, releaseDate,  personalRating, imdbRating, imdbLink, status);
-            System.out.println(sql);
             stmt.executeUpdate(sql);
+            connection.close();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
+            return false; //används aldrig men returnerar falskt om det misslyckats
+        }
+    }
+    
+    public boolean editSerie(String title, String description, String director, int seasons, int episodes, float personalRating, float imdbRating, int status, String releaseDate, int id){
+        try {
+            Connection connection = ConnectionFactory.getConnection();
+            Statement stmt = connection.createStatement();
+            String sql = String.format(Locale.US, "UPDATE movies SET "
+                    + "title = '%s',"
+                    + "description = '%s',"
+                    + "director = '%s',"
+                    + "seasons= %d,"
+                    + "episodes = %d,"
+                    + "rating = %f,"
+                    + "imdbrating = %f,"
+                    + "status = %d,"
+                    + "releaseDate = '%s'"
+                    + "WHERE id = %d",
+                    title, description, director, seasons, episodes, personalRating, imdbRating, status, releaseDate, id);
+            stmt.executeUpdate(sql);
+            connection.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
             return false;
         }
     }
 
+    public boolean editMovie(String title, String description, String director, int length, float personalRating, float imdbRating, int status, String releaseDate, int id){
+        try {
+            Connection connection = ConnectionFactory.getConnection();
+            Statement stmt = connection.createStatement();
+            String sql = String.format(Locale.US, "UPDATE movies SET "
+                    + "title = '%s',"
+                    + "description = '%s',"
+                    + "director = '%s',"
+                    + "length = %d,"
+                    + "rating = %f,"
+                    + "imdbrating = %f,"
+                    + "status = %d,"
+                    + "releaseDate = '%s'"
+                    + "WHERE id = %d",
+                    title, description, director, length, personalRating, imdbRating, status, releaseDate, id);
+            stmt.executeUpdate(sql);
+            connection.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database error");
+            return false; // används aldrig men returnerar falskt om det misslyckats
+        }
+    }
 }

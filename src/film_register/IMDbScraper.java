@@ -8,14 +8,12 @@ package film_register;
 import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  *
  * @author milooyaguez karlsson
  */
-public class IMDbScraper {
+public class IMDbScraper { //denna klassen används för att scrapa olika data från imdb genom att användaren matar in en länt till en film eller serie
 
     public String scrapeTitle(String url) throws IOException {
 

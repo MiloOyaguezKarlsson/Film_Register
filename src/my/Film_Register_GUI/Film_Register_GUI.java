@@ -9,9 +9,11 @@ import film_register.Movie;
 import film_register.Item;
 import film_register.SQLHandler;
 import film_register.TVSerie;
+import static java.awt.Color.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.border.*;
 
 /**
  *
@@ -24,17 +26,17 @@ public class Film_Register_GUI extends javax.swing.JFrame {
     /**
      * Creates new form Film_Register_GUI
      */
-    public Film_Register_GUI() {
+    public Film_Register_GUI() { //konstuktor för min gui
         initComponents();
         loadMovieList(1); //ladda listan vid start
-        loadSingleMovie(0); //visa detaljer för första filmen som default
+        loadSingleMovie(0); //visa detaljer för första filmen/serien i listan som default
     }
     //metod för att hämta listan med filmer/serier
     public void loadMovieList(int sortBy) {
 
-        SQLHandler sqlHandler = new SQLHandler(); //modellen hämtar data från databasen
-
-        switch (sortBy) {
+        SQLHandler sqlHandler = new SQLHandler(); 
+        
+        switch (sortBy) { //sortering görs med sql för det är mycket enklare
             case 1:
                 itemList = sqlHandler.getItemsDefault();
                 break;
@@ -64,10 +66,15 @@ public class Film_Register_GUI extends javax.swing.JFrame {
     }
     //metod för att visa detaljer om en film/serie
     public void loadSingleMovie(int index) {
+        if(itemList.get(index).getStatus() == 1){ //ändra färgen på kanten beroende på om man har sett filmen/serien eller inte
+            jPanel1.setBorder(new CompoundBorder(new EmptyBorder(3, 3, 4, 4), new LineBorder(green, 7))); 
+        } else{
+            jPanel1.setBorder(new CompoundBorder(new EmptyBorder(3, 3, 4, 4), new LineBorder(gray, 7)));
+        }
         if (itemList.get(index) instanceof Movie) { //om det är en film ska inte säsonger och avsnitt visas
             titleLabel.setText(itemList.get(index).getTitle());
             directorLabel.setText(itemList.get(index).getDirector());
-            descriptionLabel.setText(itemList.get(index).getDescription());
+            descriptionTextArea.setText(itemList.get(index).getDescription());
             dateLabel.setText(itemList.get(index).getReleaseDate());
             personalRatingLabel.setText(String.valueOf(itemList.get(index).getRating()));
             imdbRatingLabel.setText(String.valueOf(itemList.get(index).getImdbRating()));
@@ -82,7 +89,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         } else if(itemList.get(index) instanceof TVSerie){
             titleLabel.setText(itemList.get(index).getTitle());
             directorLabel.setText(itemList.get(index).getDirector());
-            descriptionLabel.setText(itemList.get(index).getDescription());
+            descriptionTextArea.setText(itemList.get(index).getDescription());
             dateLabel.setText(itemList.get(index).getReleaseDate());
             personalRatingLabel.setText(String.valueOf(itemList.get(index).getRating()));
             imdbRatingLabel.setText(String.valueOf(itemList.get(index).getImdbRating()));
@@ -115,7 +122,6 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         sortByComboBox = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         titleLabel = new javax.swing.JLabel();
-        descriptionLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         directorLabel = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -133,6 +139,8 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         editButton = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         imdbRatingLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        descriptionTextArea = new javax.swing.JTextArea();
         addButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
 
@@ -157,13 +165,8 @@ public class Film_Register_GUI extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
         titleLabel.setText("Title");
         titleLabel.setName("titleLabel"); // NOI18N
-
-        descriptionLabel.setText("Description");
-        descriptionLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jLabel4.setText("Director:");
 
@@ -216,6 +219,16 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         imdbRatingLabel.setToolTipText("");
         imdbRatingLabel.setName("imdbRatingLabel"); // NOI18N
 
+        descriptionTextArea.setEditable(false);
+        descriptionTextArea.setBackground(javax.swing.UIManager.getDefaults().getColor("Panel.background"));
+        descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
+        descriptionTextArea.setRows(5);
+        descriptionTextArea.setText("Description");
+        descriptionTextArea.setBorder(null);
+        descriptionTextArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPane2.setViewportView(descriptionTextArea);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -223,47 +236,51 @@ public class Film_Register_GUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(descriptionLabel)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(titleLabel)
-                        .addGap(49, 49, 49)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(directorLabel))
-                    .addComponent(editButton)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateLabel))
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
+                                .addComponent(titleLabel)
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(personalRatingLabel))
+                                .addComponent(directorLabel))
+                            .addComponent(editButton)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(seasonsPreLabel)
-                                .addGap(8, 8, 8)
-                                .addComponent(seasonsLabel)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(episodePreLabel)
+                                .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(episodesLabel))
+                                .addComponent(dateLabel))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(imdbRatingLabel))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lengthPreLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lengthLabel))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(imdbLinkLabel)))
-                .addContainerGap(60, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(personalRatingLabel))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(seasonsPreLabel)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(seasonsLabel)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(episodePreLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(episodesLabel))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(imdbRatingLabel))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel14)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(imdbLinkLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(lengthPreLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lengthLabel))))
+                        .addGap(0, 42, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,7 +291,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(directorLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(descriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -334,26 +351,28 @@ public class Film_Register_GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(refreshButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addButton))
+                        .addComponent(addButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(66, 66, 66))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 44, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(sortByComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addButton))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(sortByComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -384,7 +403,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         EditMovieJFrame editWindow = new EditMovieJFrame();
         editWindow.show();
         int id = itemList.get(movieList.getSelectedIndex()).getId(); //veta vilket id de valda filmen/serien har
-        Item itemToEdit;
+        Item itemToEdit = itemList.get(0); // som default
         for(Item item: itemList){ //leta upp fimen/serien i listan som har det id-nummret
             if(item.getId() == id){
                 itemToEdit = item;
@@ -438,7 +457,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup5;
     private javax.swing.ButtonGroup buttonGroup6;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JLabel descriptionLabel;
+    private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel directorLabel;
     private javax.swing.JButton editButton;
     private javax.swing.JLabel episodePreLabel;
@@ -453,6 +472,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lengthLabel;
     private javax.swing.JLabel lengthPreLabel;
     private javax.swing.JList<String> movieList;

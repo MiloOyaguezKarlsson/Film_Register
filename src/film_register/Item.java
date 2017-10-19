@@ -18,7 +18,7 @@ public abstract class Item {
     private float imdbRating;
     private String imdbLink;
     private int id;
-    private int status; // seen/not seen
+    private int status; // 1 = har sett 2 = har inte sett
 
     public Item(String title, String description, String director, String releaseDate, float rating, float imdbRating, String imdbLink, int id, int status) {
         this.title = title;
@@ -71,6 +71,8 @@ public abstract class Item {
     public int getStatus() {
         return status;
     }
+    
+    //get metoder för egenskaper som finns i underklasserna
     public abstract int getLength();
     public abstract int getSeasons();
     public abstract int getEpisodes();
