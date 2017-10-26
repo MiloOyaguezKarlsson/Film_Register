@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package my.Film_Register_GUI;
 
 import film_register.Movie;
@@ -13,15 +9,16 @@ import static java.awt.Color.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.border.*;
 
 /**
- *
+ * Det är här det mesta händer
  * @author milooyaguez karlsson
  */
 public class Film_Register_GUI extends javax.swing.JFrame {
 
-    List<Item> itemList = new ArrayList(); //min lista av filmer/serier
+    private List<Item> itemList = new ArrayList(); //min lista av filmer/serier
 
     /**
      * Creates new form Film_Register_GUI
@@ -29,40 +26,24 @@ public class Film_Register_GUI extends javax.swing.JFrame {
     public Film_Register_GUI() { //konstuktor för min gui
         initComponents();
         loadMovieList(1); //ladda listan vid start
-        loadSingleMovie(0); //visa detaljer för första filmen/serien i listan som default
+        if(!itemList.isEmpty()){ //ska bara hända om det finns en lista att plocka ut en film/serie ifrån
+            loadSingleMovie(0); //visa detaljer för första filmen/serien i listan som default
+        }
+        
     }
     //metod för att hämta listan med filmer/serier
     public void loadMovieList(int sortBy) {
 
         SQLHandler sqlHandler = new SQLHandler(); 
         
-        switch (sortBy) { //sortering görs med sql för det är mycket enklare
-            case 1:
-                itemList = sqlHandler.getItemsDefault();
-                break;
-            case 2:
-                itemList = sqlHandler.getItemsSortByTitle();
-                break;
-            case 3:
-                itemList = sqlHandler.getItemsSortByDirector();
-                break;
-            case 4:
-                itemList = sqlHandler.getItemsSortByReleaseDate();
-                break;
-            case 5:
-                itemList = sqlHandler.getItemsSortByRating();
-                break;
-            default:
-                itemList = sqlHandler.getItemsDefault();
-                break;
-        }
+        itemList = sqlHandler.getItems(sortBy);
 
         DefaultListModel listModel = new DefaultListModel();
         for (Item item : itemList) {
             listModel.addElement(item.getTitle());
         }
         movieList.setModel(listModel);
-        movieList.setSelectedIndex(0);
+        movieList.setSelectedIndex(0); //första filmen/serien ska alltid vara vald
     }
     //metod för att visa detaljer om en film/serie
     public void loadSingleMovie(int index) {
@@ -78,7 +59,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
             dateLabel.setText(itemList.get(index).getReleaseDate());
             personalRatingLabel.setText(String.valueOf(itemList.get(index).getRating()));
             imdbRatingLabel.setText(String.valueOf(itemList.get(index).getImdbRating()));
-            imdbLinkLabel.setText(itemList.get(index).getImdbLink());
+            imdbLinkTextField.setText(itemList.get(index).getImdbLink());
             seasonsPreLabel.hide(); //om det är en film ska inte antal avsnitt och säsonger visas
             episodePreLabel.hide();
             seasonsLabel.hide();
@@ -93,7 +74,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
             dateLabel.setText(itemList.get(index).getReleaseDate());
             personalRatingLabel.setText(String.valueOf(itemList.get(index).getRating()));
             imdbRatingLabel.setText(String.valueOf(itemList.get(index).getImdbRating()));
-            imdbLinkLabel.setText(itemList.get(index).getImdbLink());
+            imdbLinkTextField.setText(itemList.get(index).getImdbLink());
             seasonsPreLabel.show();
             seasonsLabel.setText(String.valueOf(itemList.get(index).getSeasons()));
             seasonsLabel.show();
@@ -133,7 +114,6 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         episodePreLabel = new javax.swing.JLabel();
         episodesLabel = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        imdbLinkLabel = new javax.swing.JLabel();
         lengthPreLabel = new javax.swing.JLabel();
         lengthLabel = new javax.swing.JLabel();
         editButton = new javax.swing.JButton();
@@ -141,8 +121,10 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         imdbRatingLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
+        imdbLinkTextField = new javax.swing.JTextField();
         addButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
+        emptyDatabaseButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Movie Database");
@@ -197,9 +179,6 @@ public class Film_Register_GUI extends javax.swing.JFrame {
 
         jLabel14.setText("IMDB Link:");
 
-        imdbLinkLabel.setText("Link");
-        imdbLinkLabel.setName("linkLabel"); // NOI18N
-
         lengthPreLabel.setText("Length:");
 
         lengthLabel.setText("Length");
@@ -228,6 +207,10 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         descriptionTextArea.setBorder(null);
         descriptionTextArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane2.setViewportView(descriptionTextArea);
+
+        imdbLinkTextField.setEditable(false);
+        imdbLinkTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("Panel.background"));
+        imdbLinkTextField.setBorder(null);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -270,16 +253,15 @@ public class Film_Register_GUI extends javax.swing.JFrame {
                                         .addComponent(jLabel9)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(imdbRatingLabel))))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel14)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(imdbLinkLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(lengthPreLabel)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lengthLabel))))
-                        .addGap(0, 42, Short.MAX_VALUE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lengthPreLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lengthLabel))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(imdbLinkTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -315,7 +297,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(imdbLinkLabel))
+                    .addComponent(imdbLinkTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -337,6 +319,13 @@ public class Film_Register_GUI extends javax.swing.JFrame {
             }
         });
 
+        emptyDatabaseButton.setText("Empty database");
+        emptyDatabaseButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                emptyDatabaseButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -351,13 +340,14 @@ public class Film_Register_GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(refreshButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addButton)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(addButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                            .addComponent(emptyDatabaseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 44, Short.MAX_VALUE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,9 +360,12 @@ public class Film_Register_GUI extends javax.swing.JFrame {
                         .addComponent(sortByComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(addButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(emptyDatabaseButton)))
                 .addContainerGap())
         );
 
@@ -411,6 +404,15 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         }
         editWindow.getMovie(itemToEdit);
     }//GEN-LAST:event_editButtonMouseClicked
+
+    private void emptyDatabaseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_emptyDatabaseButtonMouseClicked
+        int confirmEmptyDatabase = JOptionPane.showConfirmDialog(null, "Are you sure you would like to empty the database?");
+        if(confirmEmptyDatabase == JOptionPane.YES_OPTION){ //JOptionPane.YES_OPTION = 0 och betyder att man valt ja
+           SQLHandler sqlHandler = new SQLHandler();
+           sqlHandler.emptyDatabase();
+            loadMovieList(sortByComboBox.getSelectedIndex() + 1);
+        }
+    }//GEN-LAST:event_emptyDatabaseButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -460,9 +462,10 @@ public class Film_Register_GUI extends javax.swing.JFrame {
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel directorLabel;
     private javax.swing.JButton editButton;
+    private javax.swing.JButton emptyDatabaseButton;
     private javax.swing.JLabel episodePreLabel;
     private javax.swing.JLabel episodesLabel;
-    private javax.swing.JLabel imdbLinkLabel;
+    private javax.swing.JTextField imdbLinkTextField;
     private javax.swing.JLabel imdbRatingLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel14;

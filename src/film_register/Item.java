@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package film_register;
 
 /**
- *
+ *  Min superklass både filmer och serier ärver från denna
  * @author milooyaguez karlsson
  */
 public abstract class Item {
@@ -76,9 +72,5 @@ public abstract class Item {
     public abstract int getLength();
     public abstract int getSeasons();
     public abstract int getEpisodes();
-   
-    
-    
-    
     
 }

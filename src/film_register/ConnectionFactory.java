@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package film_register;
 
 /**
- *
+ *  Klass för att skapa en uppkoppling till databasen
  * @author milooyaguez karlsson
  */
 import com.mysql.jdbc.Connection;
@@ -19,7 +15,7 @@ import java.sql.SQLException;
  */
 public class ConnectionFactory {
     public static Connection getConnection() throws SQLException{
-        String url = "jdbc:mysql://localhost/moviedatabase"; //ändra
+        String url = "jdbc:mysql://localhost/moviedatabase";
         String user = "root";
         String password = "";
         Connection connection = (com.mysql.jdbc.Connection)DriverManager.getConnection(url, user, password);

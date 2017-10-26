@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package my.Film_Register_GUI;
 
 import film_register.Item;
@@ -12,12 +8,13 @@ import film_register.TVSerie;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * GUI för att ändra på en film i databasen
  * @author milooyaguez karlsson
  */
 public class EditMovieJFrame extends javax.swing.JFrame {
 
     Item item;
+    SQLHandler sqlHandler;
 
     /**
      * Creates new form EditMovieJFrame
@@ -230,7 +227,7 @@ public class EditMovieJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMousePressed
-        SQLHandler sqlHandler = new SQLHandler();
+        sqlHandler = new SQLHandler();
         int id = item.getId();
         String title = titleTextBox.getText();
         String description = descriptionTextBox.getText();

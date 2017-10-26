@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package my.Film_Register_GUI;
 
 import film_register.IMDbScraper;
@@ -14,14 +10,14 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * GUI för att lägga till filmer i databasen, används också för att scrapa från imdb då det görs i samband med att man lägger till filmer
  * @author milooyaguez karlsson
  */
 public class AddMovieJFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AddMovieJFrame
-     */
+    IMDbScraper scraper;
+    SQLHandler sqlHandler;
+
     public AddMovieJFrame() {
         initComponents();
     }
@@ -267,7 +263,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void imdbScrapeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imdbScrapeButtonMouseClicked
-        IMDbScraper scraper = new IMDbScraper();
+        scraper = new IMDbScraper();
         String url = imdbLinkTextBox.getText();
 
         try {
@@ -285,7 +281,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_imdbScrapeButtonMouseClicked
 
     private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseClicked
-        SQLHandler sqlHandler = new SQLHandler();
+        sqlHandler = new SQLHandler();
 
         if (typeComboBox.getSelectedItem() == "Movie") {
             int status;
@@ -294,20 +290,42 @@ public class AddMovieJFrame extends javax.swing.JFrame {
             } else {
                 status = 2; //har inte sett
             }
-            try {
-                sqlHandler.addMovie(titleTextBox.getText(),
-                        descriptionTextBox.getText(),
-                        directorTextBox.getText(),
-                        Integer.parseInt(lengthTextBox.getText()),
-                        Float.parseFloat(personalRatingTextBox.getText()),
-                        Float.parseFloat(imdbRatingTextBox.getText()),
-                        imdbLinkTextBox.getText(),
-                        status,
-                        releaseDateTextBox.getText()
-                );
-            } catch (NumberFormatException numberFormatException) {
-                JOptionPane.showMessageDialog(null, "Number formatting error");
+            //en massa if satser för att se till så att något kommer matas in exempelvis om man vill lägga upp en film/serie med bara en titel
+            if(personalRatingTextBox.getText().equals("")){
+                personalRatingTextBox.setText("0.0");
             }
+            if(imdbRatingTextBox.getText().equals("")){
+                imdbRatingTextBox.setText("0.0");
+            }
+            if(lengthTextBox.getText().equals("")){
+                lengthTextBox.setText("0");
+            }
+            if(episodesTextBox.getText().equals("")){
+                episodesTextBox.setText("0");
+            }
+            if(seasonsTextBox.getText().equals("")){
+                seasonsTextBox.setText("0");
+            }
+            //kolla så att title inte bara är en tom sträng
+            if (titleTextBox.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "You have to enter a title");
+            } else {
+                try { //speciellt för parsefloatsen som kan ge problem om man exempelvis skriver in en bokstav
+                    sqlHandler.addMovie(titleTextBox.getText(),
+                            descriptionTextBox.getText(),
+                            directorTextBox.getText(),
+                            Integer.parseInt(lengthTextBox.getText()),
+                            Float.parseFloat(personalRatingTextBox.getText()),
+                            Float.parseFloat(imdbRatingTextBox.getText()),
+                            imdbLinkTextBox.getText(),
+                            status,
+                            releaseDateTextBox.getText()
+                    );
+                } catch (NumberFormatException numberFormatException) {
+                    JOptionPane.showMessageDialog(null, "Number formatting error");
+                }
+            }
+
         } else if (typeComboBox.getSelectedItem() == "TV-Serie") {
             int status;
             if (statusCheckBox.isSelected()) {

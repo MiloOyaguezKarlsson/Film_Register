@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package film_register;
 
 /**
- *
+ *  klass för tv-serier
  * @author milooyaguez karlsson
  */
 public class TVSerie extends Item{
@@ -23,17 +19,13 @@ public class TVSerie extends Item{
     public int getLength(){
         return 0;
     }
- 
     @Override
     public int getSeasons() {
         return seasons;
     }
-
     @Override
     public int getEpisodes() {
         return episodes;
     }
-    
-    
 }
 

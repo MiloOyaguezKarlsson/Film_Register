@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package film_register;
 
 /**
- *
+ * klass för filmer
  * @author milooyaguez karlsson
  */
 public class Movie extends Item{
@@ -24,7 +20,7 @@ public class Movie extends Item{
     public int getLength() {
         return length;
     }
-    @Override
+    @Override //subklass måste overrida abstracta metoder i superklassen
     public int getSeasons(){
         return 0;
     }

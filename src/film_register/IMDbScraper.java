@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package film_register;
 
 import java.io.IOException;
@@ -10,10 +6,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
- *
+ *  Klass för att hämta data (scrapa) från en imdb sida om en specifik film/serie genom en länk till den
  * @author milooyaguez karlsson
  */
-public class IMDbScraper { //denna klassen används för att scrapa olika data från imdb genom att användaren matar in en länt till en film eller serie
+public class IMDbScraper { 
 
     public String scrapeTitle(String url) throws IOException {
 
