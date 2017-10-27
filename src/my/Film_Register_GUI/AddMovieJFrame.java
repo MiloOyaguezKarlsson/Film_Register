@@ -1,4 +1,3 @@
-
 package my.Film_Register_GUI;
 
 import film_register.IMDbScraper;
@@ -10,7 +9,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * GUI för att lägga till filmer i databasen, används också för att scrapa från imdb då det görs i samband med att man lägger till filmer
+ * GUI för att lägga till filmer i databasen, används också för att scrapa från
+ * imdb då det görs i samband med att man lägger till filmer
+ *
  * @author milooyaguez karlsson
  */
 public class AddMovieJFrame extends javax.swing.JFrame {
@@ -96,12 +97,12 @@ public class AddMovieJFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Personal rating");
 
-        personalRatingTextBox.setToolTipText("Rating 1-10 decimal");
+        personalRatingTextBox.setToolTipText("");
         personalRatingTextBox.setName("personalRatingTextBox"); // NOI18N
 
         jLabel5.setText("Release date");
 
-        releaseDateTextBox.setToolTipText("Release date format: YY-MM-DD");
+        releaseDateTextBox.setToolTipText("");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -126,7 +127,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                     .addComponent(imdbLinkTextBox)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addComponent(imdbScrapeButton)))
                 .addContainerGap())
         );
@@ -142,7 +143,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        imdbRatingTextBox.setToolTipText("Rating 1-10 decimal");
+        imdbRatingTextBox.setToolTipText("");
         imdbRatingTextBox.setName("imdbRatingTextBox"); // NOI18N
 
         jLabel7.setText("IMDb rating");
@@ -192,7 +193,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(episodesTextBox)
-                                .addComponent(titleTextBox, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                .addComponent(titleTextBox)
                                 .addComponent(directorTextBox)
                                 .addComponent(personalRatingTextBox)
                                 .addComponent(releaseDateTextBox)
@@ -202,10 +203,10 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                                 .addComponent(lengthTextBox)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(143, Short.MAX_VALUE)
                 .addComponent(addButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(143, 143, 143))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,9 +255,9 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                 .addComponent(statusCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
@@ -265,19 +266,13 @@ public class AddMovieJFrame extends javax.swing.JFrame {
     private void imdbScrapeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imdbScrapeButtonMouseClicked
         scraper = new IMDbScraper();
         String url = imdbLinkTextBox.getText();
-
-        try {
-            titleTextBox.setText(scraper.scrapeTitle(url));
-            descriptionTextBox.setText(scraper.scrapeDescription(url));
-            directorTextBox.setText(scraper.scrapeDirector(url));
-            imdbRatingTextBox.setText(String.valueOf(scraper.scrapeScore(url)));
-            lengthTextBox.setText(scraper.scrapeDuration(url));
-            episodesTextBox.setText(scraper.scrapeEpisodes(url));
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Something went wrong when scraping, check the imdb link");
-            Logger.getLogger(AddMovieJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        titleTextBox.setText(scraper.scrapeTitle(url));
+        descriptionTextBox.setText(scraper.scrapeDescription(url));
+        directorTextBox.setText(scraper.scrapeDirector(url));
+        imdbRatingTextBox.setText(String.valueOf(scraper.scrapeScore(url)));
+        lengthTextBox.setText(scraper.scrapeDuration(url));
+        episodesTextBox.setText(scraper.scrapeEpisodes(url));
+        releaseDateTextBox.setText(scraper.scrapeReleaseDate(url));
     }//GEN-LAST:event_imdbScrapeButtonMouseClicked
 
     private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseClicked
@@ -291,19 +286,19 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                 status = 2; //har inte sett
             }
             //en massa if satser för att se till så att något kommer matas in exempelvis om man vill lägga upp en film/serie med bara en titel
-            if(personalRatingTextBox.getText().equals("")){
+            if (personalRatingTextBox.getText().equals("")) {
                 personalRatingTextBox.setText("0.0");
             }
-            if(imdbRatingTextBox.getText().equals("")){
+            if (imdbRatingTextBox.getText().equals("")) {
                 imdbRatingTextBox.setText("0.0");
             }
-            if(lengthTextBox.getText().equals("")){
+            if (lengthTextBox.getText().equals("")) {
                 lengthTextBox.setText("0");
             }
-            if(episodesTextBox.getText().equals("")){
+            if (episodesTextBox.getText().equals("")) {
                 episodesTextBox.setText("0");
             }
-            if(seasonsTextBox.getText().equals("")){
+            if (seasonsTextBox.getText().equals("")) {
                 seasonsTextBox.setText("0");
             }
             //kolla så att title inte bara är en tom sträng

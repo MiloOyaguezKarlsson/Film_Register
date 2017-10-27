@@ -45,7 +45,7 @@ public class Film_Register_GUI extends javax.swing.JFrame {
         movieList.setModel(listModel);
         movieList.setSelectedIndex(0); //första filmen/serien ska alltid vara vald
     }
-    //metod för att visa detaljer om en film/serie
+    //metod för att visa detaljer om en film/serie, hämtar data och ändrar texten i labels
     public void loadSingleMovie(int index) {
         if(itemList.get(index).getStatus() == 1){ //ändra färgen på kanten beroende på om man har sett filmen/serien eller inte
             jPanel1.setBorder(new CompoundBorder(new EmptyBorder(3, 3, 4, 4), new LineBorder(green, 7))); 

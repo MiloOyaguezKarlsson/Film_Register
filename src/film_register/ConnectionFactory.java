@@ -9,10 +9,6 @@ import com.mysql.jdbc.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author milooyaguez karlsson
- */
 public class ConnectionFactory {
     public static Connection getConnection() throws SQLException{
         String url = "jdbc:mysql://localhost/moviedatabase";
