@@ -235,6 +235,7 @@ public class EditMovieJFrame extends javax.swing.JFrame {
         String title = titleTextBox.getText();
         String description = descriptionTextBox.getText();
         String director = directorTextBox.getText();
+        String releaseDate = releaseDateTextBox.getText();
         float personalRating = 0;
         float imdbRating = 0;
         try {
@@ -267,7 +268,7 @@ public class EditMovieJFrame extends javax.swing.JFrame {
             } catch (NumberFormatException numberFormatException) {
                 JOptionPane.showMessageDialog(null, "Number formatting error");
             }
-            sqlHandler.editSerie(title, description, director, seasons, episodes, personalRating, imdbRating, status, director, id);
+            sqlHandler.editSerie(title, description, director, seasons, episodes, personalRating, imdbRating, status, releaseDate, id);
         }
     }//GEN-LAST:event_editButtonMousePressed
 

@@ -95,7 +95,11 @@ public class SQLHandler {  //min klass för att hantera alla förfrågningar til
         try {
             Connection connection = ConnectionFactory.getConnection();
             Statement stmt = connection.createStatement();
-
+            
+            //byta ut enkelcitat "'" i mot "\'" så att det inte blir syntax fel
+            title = title.replace("'", "\\'");
+            description = description.replace("'", "\\'");
+            
             String sql = String.format(Locale.US, "INSERT INTO movies VALUES (" //Locale.US behövs för att formatera float med punkt istället för komma
                     + "NULL, 1, '%s', '%s', '%s', NULL, NULL, '%s', %d, %f, %f, '%s', %d)",
                     title, description, director, releaseDate, length, personalRating, imdbRating, imdbLink, status);
@@ -117,6 +121,10 @@ public class SQLHandler {  //min klass för att hantera alla förfrågningar til
             Connection connection = ConnectionFactory.getConnection();
             Statement stmt = connection.createStatement();
 
+            //byta ut enkelcitat "'" i mot "\'" så att det inte blir syntax fel
+            title = title.replace("'", "\\'");
+            description = description.replace("'", "\\'");
+            
             String sql = String.format(Locale.US, "INSERT INTO movies VALUES (" //Locale.US behövs för att formatera float med punkt istället för komma
                     + "NULL, 2, '%s', '%s', '%s', %d, %d, '%s', NULL, %f, %f, '%s', %d)",
                     title, description, director, seasons, episodes, releaseDate, personalRating, imdbRating, imdbLink, status);

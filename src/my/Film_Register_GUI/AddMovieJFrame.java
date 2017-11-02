@@ -344,6 +344,7 @@ public class AddMovieJFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Number formatting error");
             }
         }
+        
     }//GEN-LAST:event_addButtonMouseClicked
 
     /**

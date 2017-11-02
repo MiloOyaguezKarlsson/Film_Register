@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/TE4/Film_Register/src/film_register/SQLHandler.java</file>
+            <file>file:/C:/TE4/Film_Register/src/film_register/ConnectionFactory.java</file>
+            <file>file:/C:/TE4/Film_Register/src/my/Film_Register_GUI/EditMovieJFrame.java</file>
+            <file>file:/C:/TE4/Film_Register/src/my/Film_Register_GUI/AddMovieJFrame.java</file>
+            <file>file:/C:/TE4/Film_Register/test/film_register/SQLHandlerTest.java</file>
+            <file>file:/C:/TE4/Film_Register/src/film_register/IMDbScraper.java</file>
+            <file>file:/C:/TE4/Film_Register/src/film_register/Movie.java</file>
+        </group>
     </open-files>
 </project-private>
