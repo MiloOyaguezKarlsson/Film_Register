@@ -40,6 +40,7 @@ public class IMDbScraperTest {
     /**
      * Test of scrapeTitle method, of class IMDbScraper.
      */
+//    -----------Test på om man matar in en felaktiglänk eller ingen länk alls fick aldrig att funka för det kastas annat fel från inbyggda jsoup funktionen--------
 //    @Test(expected = IllegalArgumentException.class) //det är det felet man får om det inte är någon länk med
 //    public void testScrapeTitleIllegalArgumentException() {
 //        System.out.println("scrapeTitleIllegalArgumentException");
